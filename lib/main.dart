@@ -1,7 +1,7 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:music_player/Screens/playing_song.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -36,14 +36,11 @@ class _AllSongsState extends State<AllSongs> {
 
   playSong(String? uri) {
     try {
-      _audioPlayer.setAudioSource(
-          AudioSource.uri(
-            Uri.parse(uri!),
-          )
-      );
+      _audioPlayer.setAudioSource(AudioSource.uri(
+        Uri.parse(uri!),
+      ));
       _audioPlayer.play();
-    }
-    on Exception {
+    } on Exception {
       log("Error parsing song");
     }
   }
@@ -92,10 +89,17 @@ class _AllSongsState extends State<AllSongs> {
               subtitle: Text(item.data![index].artist.toString()),
               trailing: const Icon(Icons.more_horiz),
               onTap: () {
-                playSong(item.data![index].uri);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PlayingSong(
+                      songModel: item.data![index],
+                      audioPlayer: _audioPlayer,
+                    ),
+                  ),
+                );
               },
             ),
-
           );
         },
       ),
