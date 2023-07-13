@@ -22,19 +22,11 @@ class _SongsPlayingState extends State<SongsPlaying> {
   @override
   void initState() {
     super.initState();
-    // Timer(const Duration(seconds: 2),
-    //         ()=>Navigator.pushReplacement(context,
-    //         MaterialPageRoute(builder:
-    //             (context) =>
-    //             const SplashScreen(),
-    //         )
-    //     )
-    // );
     requestPermission();
   }
 
   requestPermission() async {
-    PermissionStatus status = await Permission.storage.status;
+    PermissionStatus status = await Permission.audio.status;
     if (!status.isGranted) {
       status = await Permission.storage.request();
     }
