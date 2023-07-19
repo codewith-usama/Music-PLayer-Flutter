@@ -175,50 +175,45 @@ class _TestState extends State<Test> {
                 uriType: UriType.EXTERNAL,
                 ignoreCase: true,
               ),
-              builder: (context, item) {
-                if (item.data == null) {
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
-                    child: Column(
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Text("Loading"),
-                      ],
-                    ),
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError || snapshot.data == null) {
+                  return const Center(
+                    child: Text("Error loading songs"),
                   );
                 }
-                if (item.data!.isEmpty) {
-                  return const Center(child: Text("Nothing found!"));
-                }
+
+                // Save the list of songs to the SongModelProvider
+                context.read<SongModelProvider>().setSongs(snapshot.data!);
+
                 return ListView.builder(
-                  itemCount: item.data!.length,
+                  itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    allSongs.addAll(item.data!);
+                    final song = snapshot.data![index];
                     return GestureDetector(
                       onTap: () {
-                        context
-                            .read<SongModelProvider>()
-                            .setId(item.data![index].id);
+                        context.read<SongModelProvider>().setId(song.id);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => NowPlaying(
-                              songModelList: [item.data![index]],
+                              songModelList: snapshot.data!,
                               audioPlayer: _audioPlayer,
                             ),
                           ),
                         );
                       },
                       child: MusicTile(
-                        songModel: item.data![index],
+                        songModel: song,
                       ),
                     );
                   },
                 );
               },
-            )
+            ),
           ],
         ),
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/utils/extensions/song_model_extension.dart';
+import 'package:music_player/utils/song_model_extension.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-
 
 class MusicTile extends StatelessWidget {
   final SongModel songModel;
